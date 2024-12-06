@@ -1,0 +1,257 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+
+// Class representing a Course
+class Course {
+    String courseName;
+    String courseCode;
+
+    public Course(String courseName, String courseCode) {
+        this.courseName = courseName;
+        this.courseCode = courseCode;
+    }
+
+    public String getDetails() {
+        return "Course Name: " + courseName + "\nCourse Code: " + courseCode;
+    }
+}
+
+// Class representing a Student
+class Student {
+    String name;
+    String rollNumber;
+    List<Course> courses;
+
+    public Student(String name, String rollNumber) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.courses = new ArrayList<>();
+    }
+
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
+
+    public String getDetails() {
+        StringBuilder details = new StringBuilder("Student Name: " + name + "\nRoll Number: " + rollNumber + "\nCourses Enrolled:\n");
+        for (Course course : courses) {
+            details.append(course.getDetails()).append("\n");
+        }
+        return details.toString();
+    }
+}
+
+// Class representing a Teacher
+class Teacher {
+    String name;
+    String teacherID;
+    List<Course> courses;
+
+    public Teacher(String name, String teacherID) {
+        this.name = name;
+        this.teacherID = teacherID;
+        this.courses = new ArrayList<>();
+    }
+
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
+
+    public String getDetails() {
+        StringBuilder details = new StringBuilder("Teacher Name: " + name + "\nTeacher ID: " + teacherID + "\nCourses Taught:\n");
+        for (Course course : courses) {
+            details.append(course.getDetails()).append("\n");
+        }
+        return details.toString();
+    }
+}
+
+// Class representing the School Management System
+class SchoolManagementSystem {
+    List<Student> students;
+    List<Teacher> teachers;
+    List<Course> courses;
+
+    public SchoolManagementSystem() {
+        students = new ArrayList<>();
+        teachers = new ArrayList<>();
+        courses = new ArrayList<>();
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+
+    public void addTeacher(Teacher teacher) {
+        teachers.add(teacher);
+    }
+
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
+
+    public List<Student> getAllStudents() {
+        return students;
+    }
+
+    public List<Teacher> getAllTeachers() {
+        return teachers;
+    }
+
+    public List<Course> getAllCourses() {
+        return courses;
+    }
+}
+
+// Main class with GUI (Swing) implementation
+public class Main {
+    public static void main(String[] args) {
+        // Create the main window
+        JFrame frame = new JFrame("School Management System");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 500);
+        frame.setLayout(new BorderLayout());
+
+        // Create the school management system
+        SchoolManagementSystem system = new SchoolManagementSystem();
+
+        // Create components for GUI
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JLabel studentNameLabel = new JLabel("Student Name:");
+        JTextField studentNameField = new JTextField(20);
+        JLabel rollNumberLabel = new JLabel("Roll Number:");
+        JTextField rollNumberField = new JTextField(20);
+
+        JLabel teacherNameLabel = new JLabel("Teacher Name:");
+        JTextField teacherNameField = new JTextField(20);
+        JLabel teacherIDLabel = new JLabel("Teacher ID:");
+        JTextField teacherIDField = new JTextField(20);
+
+        JLabel courseNameLabel = new JLabel("Course Name:");
+        JTextField courseNameField = new JTextField(20);
+        JLabel courseCodeLabel = new JLabel("Course Code:");
+        JTextField courseCodeField = new JTextField(20);
+
+        JButton addStudentButton = new JButton("Add Student");
+        JButton addTeacherButton = new JButton("Add Teacher");
+        JButton addCourseButton = new JButton("Add Course");
+
+        JTextArea displayArea = new JTextArea(10, 50);
+        displayArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+
+        JButton viewStudentsButton = new JButton("View All Students");
+        JButton viewTeachersButton = new JButton("View All Teachers");
+        JButton viewCoursesButton = new JButton("View All Courses");
+
+        // Action listener for Add Student button
+        addStudentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = studentNameField.getText();
+                String rollNumber = rollNumberField.getText();
+                Student student = new Student(name, rollNumber);
+                system.addStudent(student);
+                studentNameField.setText("");
+                rollNumberField.setText("");
+                displayArea.append("Student Added: " + name + " (Roll No: " + rollNumber + ")\n");
+            }
+        });
+
+        // Action listener for Add Teacher button
+        addTeacherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = teacherNameField.getText();
+                String teacherID = teacherIDField.getText();
+                Teacher teacher = new Teacher(name, teacherID);
+                system.addTeacher(teacher);
+                teacherNameField.setText("");
+                teacherIDField.setText("");
+                displayArea.append("Teacher Added: " + name + " (ID: " + teacherID + ")\n");
+            }
+        });
+
+        // Action listener for Add Course button
+        addCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = courseNameField.getText();
+                String code = courseCodeField.getText();
+                Course course = new Course(name, code);
+                system.addCourse(course);
+                courseNameField.setText("");
+                courseCodeField.setText("");
+                displayArea.append("Course Added: " + name + " (Code: " + code + ")\n");
+            }
+        });
+
+        // Action listener for View Students button
+        viewStudentsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayArea.setText("All Students:\n");
+                for (Student student : system.getAllStudents()) {
+                    displayArea.append(student.getDetails() + "\n");
+                }
+            }
+        });
+
+        // Action listener for View Teachers button
+        viewTeachersButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayArea.setText("All Teachers:\n");
+                for (Teacher teacher : system.getAllTeachers()) {
+                    displayArea.append(teacher.getDetails() + "\n");
+                }
+            }
+        });
+
+        // Action listener for View Courses button
+        viewCoursesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayArea.setText("All Courses:\n");
+                for (Course course : system.getAllCourses()) {
+                    displayArea.append(course.getDetails() + "\n");
+                }
+            }
+        });
+
+        // Add components to the panel
+        panel.add(studentNameLabel);
+        panel.add(studentNameField);
+        panel.add(rollNumberLabel);
+        panel.add(rollNumberField);
+        panel.add(addStudentButton);
+
+        panel.add(teacherNameLabel);
+        panel.add(teacherNameField);
+        panel.add(teacherIDLabel);
+        panel.add(teacherIDField);
+        panel.add(addTeacherButton);
+
+        panel.add(courseNameLabel);
+        panel.add(courseNameField);
+        panel.add(courseCodeLabel);
+        panel.add(courseCodeField);
+        panel.add(addCourseButton);
+
+        panel.add(viewStudentsButton);
+        panel.add(viewTeachersButton);
+        panel.add(viewCoursesButton);
+        panel.add(scrollPane);
+
+        // Add panel to the frame
+        frame.add(panel, BorderLayout.CENTER);
+
+        // Display the window
+        frame.setVisible(true);
+    }
+}
